@@ -6,9 +6,14 @@ import TodoList from "./components/todos/TodoList";
 import { useState } from "react";
 
 import TODOS from "./dummyToDos";
+import NewToDoForm from "./components/NewToDoForm";
 
 function App() {
   const [todos, setToDos] = useState(TODOS);
+
+  const addToDoHandler=(todo)=>{
+    setToDos(prevToDos=>[todo,...prevToDos])
+  }
 
   return (
     <Container>
@@ -17,6 +22,9 @@ function App() {
           <Navbar.Brand href="#">To-Do App</Navbar.Brand>
         </Container>
       </Navbar>
+      <Row>
+        <NewToDoForm onAdd={addToDoHandler}/>
+      </Row>
       <Row>
         <h2>To Dos:</h2>
         {todos && todos.length > 1 ? (

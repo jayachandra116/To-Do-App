@@ -13,7 +13,7 @@ const TodoList = (props) => {
         <ListGroup as="ul">
           <ul>
             {todos.map((todo) => (
-              <TodoItem toDO={todo} key={todo} />
+              <TodoItem toDO={todo} key={Math.random()} />
             ))}
           </ul>
         </ListGroup>
