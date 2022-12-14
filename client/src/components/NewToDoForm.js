@@ -26,7 +26,8 @@ const NewToDoForm=(props)=>{
     setUserInput({
       title:""
     })
-    console.table(userInput)  
+    console.table(userInput)
+    setFormValid(null)
   }
 
   return(
