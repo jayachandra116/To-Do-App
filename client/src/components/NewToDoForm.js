@@ -1,50 +1,52 @@
-import { useState } from "react";
+import { useState } from "react"
 
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
+const NewToDoForm=(props)=>{
 
-const NewToDoForm = (props) => {
-  const [userInput, setUserInput] = useState({
-    title: "",
-  });
-  const onUserInputChangeHandler = (e) => {
-    let { name, value } = e.target;
-    setUserInput((prevUserInput) => {
-      return {
-        ...prevUserInput,
-        [name]: value,
-      };
-    });
-  };
-  const formSubmitHandler = (e) => {
-    e.preventDefault();
-    console.table(userInput);
+  const [userInput,setUserInput]=useState({
+    title:""
+  })
+  const [formValid,setFormValid]=useState(false);
+
+  const userInputChangeHandler=(e)=>{
+    let {name,value}=e.target;
+    if(value.trim()){
+      setUserInput(prevInput=>{
+        return{
+          ...prevInput,
+          [name]:value.replace(/^\s+/gm,'')
+        }
+      })
+      setFormValid(true)
+    }
+  }
+
+  const formSubmitHandler=(e)=>{
+    e.preventDefault()
     props.onAdd(userInput.title)
-  };
+    setUserInput({
+      title:""
+    })
+    console.table(userInput)  
+  }
 
-  return (
-    <div className="mt-3 mb-3">
-      <Form onSubmit={formSubmitHandler}>
-        <Form.Group className="m-2">
-          <Form.Control
-            as="input"
-            type="text"
-            name="title"
-            id="todo_title"
-            placeholder="Create a todo here"
-            value={userInput.title}
-            onChange={onUserInputChangeHandler}
-            required
-          />
-        </Form.Group>
-        <Form.Group className="m-2">
-          <Button type="submit" variant="primary">
-            Create
-          </Button>
-        </Form.Group>
-      </Form>
+  return(
+    <div className="container mt-5 mb-5">
+      <form onSubmit={formSubmitHandler}>
+        <div className="row m-2">
+          <div className="col">
+            <div className="input-group">
+              <input className="form-control" type='text' placeholder="Enter you todo here" name="title" id="newToDoTitle" value={userInput.title} onChange={userInputChangeHandler}/>
+            </div>
+          </div>
+        </div>
+        <div className="row m-2">
+          <div className="col">
+            <button type="submit" className="btn btn-primary" disabled={!formValid}>Submit</button>
+          </div>
+        </div>
+      </form>
     </div>
-  );
-};
+  )
+}
 
-export default NewToDoForm;
+export default NewToDoForm

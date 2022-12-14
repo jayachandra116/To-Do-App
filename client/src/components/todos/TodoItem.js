@@ -1,11 +1,9 @@
-import ListGroup from "react-bootstrap/ListGroup";
+
 
 const TodoItem = (props) => {
-  let todo = props.toDO;
+  let todo = props.todo;
   return (
-    <ListGroup.Item action key={todo}>
-      {todo}
-    </ListGroup.Item>
+    <button className="list-group-item list-group-item-action" key={props.id}>{todo}</button>
   );
 };
 
