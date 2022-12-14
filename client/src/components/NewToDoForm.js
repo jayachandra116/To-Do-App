@@ -2,7 +2,6 @@ import { useState } from "react";
 
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import Container from "react-bootstrap/Container";
 
 const NewToDoForm = (props) => {
   const [userInput, setUserInput] = useState({
@@ -35,6 +34,7 @@ const NewToDoForm = (props) => {
             placeholder="Create a todo here"
             value={userInput.title}
             onChange={onUserInputChangeHandler}
+            required
           />
         </Form.Group>
         <Form.Group className="m-2">
