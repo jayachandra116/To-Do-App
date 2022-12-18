@@ -1,6 +1,8 @@
 import { useDispatch } from "react-redux";
 import { useState } from "react";
 
+import {markAsDone,removeToDo,updateToDo,toggleToDoComplete} from '../../store/todoSlice';
+
 const TodoItem = (props) => {
   const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
@@ -11,11 +13,15 @@ const TodoItem = (props) => {
   let todo = props.todo;
 
   const doneClickHandler = (id) => {
-    dispatch({ type: "DONETODO", payload: id });
+    dispatch(markAsDone({id:id}))
   };
 
+  const toggleDoneClickHandler=(id)=>{
+    dispatch(toggleToDoComplete({id:id}))
+  }
+
   const deleteClickHandler=(id)=>{
-    dispatch({ type: "REMOVETODO", payload: id });
+    dispatch(removeToDo({id:id}))
   }
 
   const toggleEditing = () => {
@@ -26,6 +32,7 @@ const TodoItem = (props) => {
     let { name, value } = e.target;
     setInput((p) => {
       return {
+        ...p,
         [name]: value,
       };
     });
@@ -33,29 +40,24 @@ const TodoItem = (props) => {
 
   const itemEditContainer = (
     <form >
-    <input
-      className="mb-auto"
-      type="text"
-      placeholder={todo.title}
-      onChange={onInputChangeHandler}
-      value={input.title}
-      name="title"
-      id="NewToDoTitle"
+      <input className="mb-auto" type="text" placeholder={todo.title} onChange={onInputChangeHandler}
+      value={input.title} name="title" id="NewToDoTitle"
       style={{"borderTop":0,"borderLeft":0,"borderRight":0,}}
     />
     </form>
   );
 
   const updateToDoHandler = (id) => {
-    dispatch({
-      type: "UPDATETODO",
-      payload: {
-        id: id,
-        title: input.title,
-        complete: false,
-      },
-    });
-    setInput({title:""})
+    dispatch(updateToDo(
+      {
+        item:{
+          id:id,
+          title:input.title,
+          complete:false
+        }
+      }
+    ))
+    //setInput({title:""})
     setIsEditing(false)
   };
 
@@ -75,7 +77,7 @@ const TodoItem = (props) => {
             <div className="col">
               {isEditing && (
                 <button className="btn" title="Update todo" onClick={() => updateToDoHandler(todo.id)}>
-                  <span className="material-icons">upgrade</span>
+                  <span className="material-icons">done</span>
                 </button>
                 )
               }
@@ -83,15 +85,15 @@ const TodoItem = (props) => {
           </div>
         </div>
         <div className="col">
-          <button onClick={() => {doneClickHandler(todo.id)}} className="btn ml-1 mr-1" title="Mark as done?" disabled={isEditing}>
+            <button onClick={() => toggleDoneClickHandler(todo.id)} className="btn ml-1 mr-1" title="Toggle done?" disabled={isEditing}>
             {/* mark a todo as complete */}
-            <span className="material-icons">task_alt</span>
+            <span className="material-icons">done</span>
           </button>
           <button onClick={toggleEditing} className="btn ml-1 mr-1" title="Edit todo?" disabled={todo.complete}>
             {/* Edit a todo */}
             <span className="material-icons">edit_note</span>
           </button>
-          <button onClick={() => {deleteClickHandler(todo.id)}} className="btn ml-1 mr-1" title="delete todo?" disabled={isEditing}>
+          <button onClick={() => deleteClickHandler(todo.id)} className="btn ml-1 mr-1" title="delete todo?" disabled={isEditing}>
             {/* Delete a todo */}
             <span className="material-icons">delete</span>
           </button>

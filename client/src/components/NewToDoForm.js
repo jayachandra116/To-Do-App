@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { addToDo } from "../store/todoSlice";
 
 const NewToDoForm = (props) => {
   const dispatch = useDispatch();
@@ -8,31 +9,34 @@ const NewToDoForm = (props) => {
   });
   const [formValid, setFormValid] = useState(false);
 
-  const userInputChangeHandler = (e) => {
+  const inputChangeHandler = (e) => {
     let { name, value } = e.target;
-    if (value.trim()) {
-      setUserInput((prevInput) => {
-        return {
-          ...prevInput,
-          [name]: value,
-        };
-      });
-      setFormValid(true);
-    }
+    setUserInput(
+      {
+        [name]:value,
+      }
+    )
+    value.match(/^\s+$|^$/)?setFormValid(false):setFormValid(true)
   };
 
   const formSubmitHandler = (e) => {
     e.preventDefault();
-    dispatch({ type: "ADDTODO", payload: userInput.title,complete:false });
+    //dispatch({ type: "ADDTODO", payload: userInput.title,complete:false });
+    let todo={
+      id:Math.random().toString(),
+      title:userInput.title,
+      complete:false
+    }
+    dispatch(addToDo({toDoItem:todo}))
     setUserInput({
       title: "",
     });
-    console.table(userInput);
+    //console.table(todo);
     setFormValid(null);
   };
 
   return (
-    <div className="container mt-5 mb-5">
+    <div className="mt-5 mb-5">
       <form onSubmit={formSubmitHandler}>
         <div className="row m-2">
           <div className="col">
@@ -40,11 +44,11 @@ const NewToDoForm = (props) => {
               <input
                 className="form-control"
                 type="text"
-                placeholder="Enter you todo here"
+                placeholder="Try typing  'Get groceries' "
                 name="title"
                 id="newToDoTitle"
                 value={userInput.title}
-                onChange={userInputChangeHandler}
+                onChange={inputChangeHandler}
               />
             </div>
           </div>
@@ -53,7 +57,7 @@ const NewToDoForm = (props) => {
           <div className="col">
             <button
               type="submit"
-              className="btn btn-primary"
+              className="btn btn-dark"
               disabled={!formValid}
             >
               Submit

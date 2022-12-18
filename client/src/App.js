@@ -3,7 +3,8 @@ import NewToDoForm from "./components/NewToDoForm";
 
 import Container from "./components/UI/Container";
 import Navbar from "./components/UI/Navbar";
-import { useState } from "react";
+
+import appStyles from './App.css';
 
 function App() {
   return (
