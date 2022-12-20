@@ -1,9 +1,15 @@
+require("./db/mongoose");
 const express = require("express");
 
 const app = express();
 
-app.get('/',(req,res)=>{
-    res.send("Hello world")
-})
+//middlewares
+const logAction = require("./middlewares/logger");
 
-module.exports=app;
+//routers
+const todosRouter = require("./routers/todoRouter");
+
+app.use(express.json());
+app.use(todosRouter);
+
+module.exports = app;
