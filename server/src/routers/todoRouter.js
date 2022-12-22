@@ -97,13 +97,11 @@ todosRouter.patch("/todos/update/:id", async (req, res) => {
     await todo.save();
     res.send({ message: "Todo updated succesfully", record: todo });
   } catch (e) {
-    res.status(400).send(
-      {
-        error:{
-          message:e.name
-        }
-      }
-    );
+    res.status(400).send({
+      error: {
+        message: e.name,
+      },
+    });
   }
 });
 
