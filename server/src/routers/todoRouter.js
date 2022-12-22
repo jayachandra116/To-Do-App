@@ -31,10 +31,30 @@ todosRouter.get("/todos/:id", async (req, res) => {
       res.sendStatus(404);
     }
     //res.send(todos);
-    res.send({ message: "Got todo", record: todo });
+    res.send({ message: "operation success", record: todo });
   } catch (e) {
     console.log(e);
     res.status(400).send();
+  }
+});
+
+// delete all todos
+todosRouter.delete("/todos/delete/all", async (req, res) => {
+  try {
+    const todos = await Todo.deleteMany({});
+    if (!todos) {
+      res.sendStatus(400);
+    }
+    let responseObj = {};
+    responseObj.message =
+      todos.deletedCount > 0
+        ? "Deleted all todos succesfully"
+        : "No Todos found to delete";
+    responseObj.total = todos.deletedCount;
+    res.send(responseObj);
+  } catch (e) {
+    res.status(400);
+    res.send({ error: e });
   }
 });
 
@@ -58,8 +78,6 @@ todosRouter.delete("/todos/delete/:id", async (req, res) => {
 
 // update a todo
 todosRouter.patch("/todos/update/:id", async (req, res) => {
-  console.log(req.body);
-  console.log(req.params.id);
   const updates = Object.keys(req.body);
   const allowedUpdates = ["title", "complete"];
   const isValidOperation = updates.every((update) =>
@@ -72,16 +90,20 @@ todosRouter.patch("/todos/update/:id", async (req, res) => {
 
   try {
     const todo = await Todo.findById(req.params.id);
-
     if (!todo) {
       return res.status(404).send();
     }
-
     updates.forEach((update) => (todo[update] = req.body[update]));
     await todo.save();
     res.send({ message: "Todo updated succesfully", record: todo });
   } catch (e) {
-    res.status(400).send(e);
+    res.status(400).send(
+      {
+        error:{
+          message:e.name
+        }
+      }
+    );
   }
 });
 
